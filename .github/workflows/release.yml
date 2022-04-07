@@ -62,19 +62,17 @@ jobs:
           cache: npm
       - name: Pack
         run: |
-          node bin/npm-cli.js rm npm -g -f
-          which npm || true
           NPM_VERSION="$(node bin/npm-cli.js --version)-$GITHUB_SHA.0"
           node bin/npm-cli.js version $NPM_VERSION --ignore-scripts
           node bin/npm-cli.js run resetdeps
           git clean -fd
-          node bin/npm-cli.js ls --production
+          node bin/npm-cli.js ls --production >/dev/null
           node bin/npm-cli.js prune --production --no-save --no-audit --no-fund
           node scripts/git-dirty.js
           node bin/npm-cli.js pack --pack-destination=$RUNNER_TEMP
           node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION.tgz
           node bin/npm-cli.js install --no-audit --no-fund -w smoke-tests --ignore-scripts
-          SMOKE_TEST_NPM_DIR=$(which npm) node bin/npm-cli.js test -w smoke-tests --ignore-scripts
+          SMOKE_TEST_NPM=$(readlink -f $(which npm)) node bin/npm-cli.js test -w smoke-tests --ignore-scripts
           node scripts/git-dirty.js
 
   test-all:

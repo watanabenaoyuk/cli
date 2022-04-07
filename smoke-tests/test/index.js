@@ -1,12 +1,15 @@
 const fs = require('fs')
 const { promisify } = require('util')
 const execAsync = promisify(require('child_process').exec)
-const { join, resolve } = require('path')
+const { join, resolve, dirname } = require('path')
 const t = require('tap')
 const rimraf = promisify(require('rimraf'))
 
+const { SMOKE_TEST_NPM, CI, PATH } = process.env
+
 const cwd = resolve(__dirname, '..', '..')
-const npmDir = process.env.SMOKE_TEST_NPM_DIR || cwd
+const npmLocation = SMOKE_TEST_NPM || join(cwd, 'bin', 'npm-cli.js')
+const npmDir = dirname(dirname(npmLocation))
 
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
 
@@ -39,7 +42,6 @@ const path = t.testdir({
 })
 const localPrefix = resolve(path, 'project')
 const userconfigLocation = resolve(path, '.npmrc')
-const npmLocation = join(npmDir, 'bin', 'npm-cli.js')
 const cacheLocation = resolve(path, 'cache')
 const binLocation = resolve(path, 'bin')
 
@@ -62,11 +64,11 @@ const exec = async (cmd, ...extraOpts) => {
     cwd: localPrefix,
     env: {
       HOME: path,
-      PATH: `${process.env.PATH}:${binLocation}`,
+      PATH: `${PATH}:${binLocation}`,
     },
     encoding: 'utf-8',
   })
-  if (res.stderr && process.env.CI) {
+  if (res.stderr && CI) {
     console.error(res.stderr)
   }
   return res.stdout
@@ -138,10 +140,15 @@ t.test('npm init', async t => {
 t.test('npm (no args)', async t => {
   const err = await exec('', '--loglevel=notice').catch(e => e)
 
-  const [version, whereami] = err.stdout.match(/^npm@.*$/m)[0].split(' ')
-
-  console.error(version)
-  console.error(whereami)
+  if (SMOKE_TEST_NPM) {
+    const [, fullVersion] = err.stdout.match(/^npm@([0-9a-f-.]+)\s/m, 'npm ')
+    const realVersion = require(join(cwd, 'package.json')).version
+    t.match(
+      fullVersion,
+      new RegExp(`^${realVersion}-[0-9a-f]{40}\\.0$`),
+      'must have a git version'
+    )
+  }
 
   t.equal(err.code, 1, 'should exit with error code')
   t.equal(err.stderr, '', 'should have no stderr output')
