@@ -71,9 +71,9 @@ jobs:
           node scripts/git-dirty.js
           node bin/npm-cli.js pack --pack-destination=$RUNNER_TEMP
           node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION.tgz
-          node bin/npm-cli.js install --no-audit --no-fund -w smoke-tests --ignore-scripts
+          node bin/npm-cli.js install -w smoke-tests --ignore-scripts --no-audit --no-fund
           rm -rf {lib,bin,index.js}
-          SMOKE_TEST_NPM=$(readlink -f $(which npm)) node bin/npm-cli.js test -w smoke-tests --ignore-scripts
+          SMOKE_TEST_NPM=$(readlink -f $(which npm)) npm test -w smoke-tests --ignore-scripts
           
   test-all:
     if: |
