@@ -72,7 +72,7 @@ jobs:
           node bin/npm-cli.js prune --production --no-save --no-audit --no-fund
           node scripts/git-dirty.js
           node bin/npm-cli.js pack --pack-destination=$RUNNER_TEMP
-          node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION-$GITHUB_SHA.0
+          node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION-$GITHUB_SHA.0.tgz
           node bin/npm-cli.js install --ignore-scripts --no-audit --no-fund -w smoke-tests
           SMOKE_TEST_NPM_DIR=$(which npm) node bin/npm-cli.js run smoke-tests
           node scripts/git-dirty.js
