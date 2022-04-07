@@ -72,9 +72,9 @@ jobs:
           node bin/npm-cli.js pack --pack-destination=$RUNNER_TEMP
           node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION.tgz
           node bin/npm-cli.js install --no-audit --no-fund -w smoke-tests --ignore-scripts
+          rm -rf {lib,bin,index.js}
           SMOKE_TEST_NPM=$(readlink -f $(which npm)) node bin/npm-cli.js test -w smoke-tests --ignore-scripts
-          node scripts/git-dirty.js
-
+          
   test-all:
     if: |
       github.event_name == 'schedule' ||

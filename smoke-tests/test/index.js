@@ -137,18 +137,18 @@ t.test('npm init', async t => {
   t.equal(pkg.version, '1.0.0', 'should have expected generated version')
 })
 
-t.test('npm (no args)', async t => {
-  const err = await exec('', '--loglevel=notice').catch(e => e)
+t.test('npm --version', async t => {
+  const v = await exec('npm --version')
 
   if (SMOKE_TEST_NPM) {
-    const [, fullVersion] = err.stdout.match(/^npm@([0-9a-f-.]+)\s/m, 'npm ')
-    const realVersion = require(join(cwd, 'package.json')).version
-    t.match(
-      fullVersion,
-      new RegExp(`^${realVersion}-[0-9a-f]{40}\\.0$`),
-      'must have a git version'
-    )
+    t.match(v.trim(), /-[0-9a-f]{40}\.\d$/, 'must have a git version')
+  } else {
+    t.skip('not checking version')
   }
+})
+
+t.test('npm (no args)', async t => {
+  const err = await exec('', '--loglevel=notice').catch(e => e)
 
   t.equal(err.code, 1, 'should exit with error code')
   t.equal(err.stderr, '', 'should have no stderr output')
