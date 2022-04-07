@@ -42,6 +42,17 @@ npm {CWD}
 
 `
 
+exports[`test/index.js TAP npm ci > should throw mismatch deps in lock file error 1`] = `
+npm ERR! \`npm ci\` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with \`npm install\` before continuing.
+npm ERR! 
+npm ERR! Invalid: lock file's abbrev@1.0.4 does not satisfy abbrev@1.1.1
+npm ERR! 
+
+npm ERR! A complete log of this run can be found in:
+
+
+`
+
 exports[`test/index.js TAP npm diff > should have expected diff output 1`] = `
 diff --git a/package.json b/package.json
 index v1.0.4..v1.1.1 100644
@@ -299,148 +310,308 @@ index v1.0.4..v1.1.1
 
 exports[`test/index.js TAP npm explain > should have expected explain output 1`] = `
 abbrev@1.0.4
-smoke-tests/node_modules/abbrev
-  abbrev@"^1.0.4" from smoke-tests@1.0.0
-  smoke-tests
-    smoke-tests@1.0.0
-    node_modules/smoke-tests
-      workspace smoke-tests from the root project
+node_modules/abbrev
+  abbrev@"^1.0.4" from the root project
 
 `
 
 exports[`test/index.js TAP npm fund > should have expected fund output 1`] = `
-npm@8.6.0
+project@1.0.0
 \`-- https://github.com/sponsors/isaacs
-    \`-- glob@7.2.0, rimraf@3.0.2, tap@16.0.1, libtap@1.3.0, promise-all-reject-late@1.0.1
+    \`-- promise-all-reject-late@1.0.1
 
 
 `
 
 exports[`test/index.js TAP npm init > should have successful npm init result 1`] = `
-Wrote to {CWD}/smoke-tests/package.json:
+Wrote to {CWD}/smoke-tests/test/tap-testdir-index/project/package.json:
 
 {
-  "name": "smoke-tests",
-  "description": "The npm cli smoke tests",
+  "name": "project",
   "version": "1.0.0",
-  "private": true,
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "lint": "eslint /"**/*.js/"",
-    "postlint": "template-oss-check",
-    "lintfix": "npm run lint -- --fix",
-    "preversion": "npm test",
-    "postversion": "git push origin --follow-tags",
-    "snap": "tap",
-    "test": "tap",
-    "template-oss-apply": "template-oss-apply --force",
-    "posttest": "npm run lint",
-    "hello": "echo Hello"
+    "test": "echo /"Error: no test specified/" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/npm/cli.git",
-    "directory": "smoke-tests"
-  },
-  "dependencies": {
-    "abbrev": "1.0.4",
-    "minify-registry-metadata": "^2.2.0"
-  },
-  "devDependencies": {
-    "@npmcli/template-oss": "3.3.2",
-    "tap": "^16.0.1"
-  },
-  "author": "GitHub Inc.",
-  "license": "ISC",
-  "templateOSS": {
-    "//@npmcli/template-oss": "This file is partially managed by @npmcli/template-oss. Edits may be overwritten.",
-    "version": "3.3.2",
-    "workspaceRepo": false
-  },
-  "tap": {
-    "no-coverage": true
-  },
-  "files": [
-    "bin/",
-    "lib/"
-  ],
-  "engines": {
-    "node": "^12.13.0 || ^14.15.0 || >=16.0.0"
-  },
-  "bugs": {
-    "url": "https://github.com/npm/cli/issues"
-  },
-  "homepage": "https://github.com/npm/cli#readme",
-  "main": ".eslintrc.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
-  "keywords": []
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
 
 
 
 `
 
+exports[`test/index.js TAP npm install dev dep > should have expected dev dep added lockfile result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "project",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "abbrev": "^1.0.4"
+      },
+      "devDependencies": {
+        "promise-all-reject-late": "^1.0.1"
+      }
+    },
+    "node_modules/abbrev": {
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.0.4.tgz",
+      "integrity": "sha1-vVWuXkE7oXIu5Mq6H26hBBSlns0="
+    },
+    "node_modules/promise-all-reject-late": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/promise-all-reject-late/-/promise-all-reject-late-1.0.1.tgz",
+      "integrity": "sha512-vuf0Lf0lOxyQREH7GDIOUMLS7kz+gs8i6B+Yi8dC68a2sychGrHTJYghMBD6k7eUcH0H5P73EckCA48xijWqXw==",
+      "dev": true,
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    }
+  },
+  "dependencies": {
+    "abbrev": {
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.0.4.tgz",
+      "integrity": "sha1-vVWuXkE7oXIu5Mq6H26hBBSlns0="
+    },
+    "promise-all-reject-late": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/promise-all-reject-late/-/promise-all-reject-late-1.0.1.tgz",
+      "integrity": "sha512-vuf0Lf0lOxyQREH7GDIOUMLS7kz+gs8i6B+Yi8dC68a2sychGrHTJYghMBD6k7eUcH0H5P73EckCA48xijWqXw==",
+      "dev": true
+    }
+  }
+}
+
+`
+
+exports[`test/index.js TAP npm install dev dep > should have expected dev dep added package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  },
+  "devDependencies": {
+    "promise-all-reject-late": "^1.0.1"
+  }
+}
+
+`
+
 exports[`test/index.js TAP npm install dev dep > should have expected dev dep added reify output 1`] = `
 
-up to date 
+added 1 package 
 
-134 packages are looking for funding
+1 package is looking for funding
   run \`npm fund\` for details
 
 `
 
 exports[`test/index.js TAP npm install prodDep@version > should have expected install reify output 1`] = `
 
-up to date 
+added 1 package 
 
-134 packages are looking for funding
-  run \`npm fund\` for details
+`
+
+exports[`test/index.js TAP npm install prodDep@version > should have expected lockfile result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "project",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "abbrev": "^1.0.4"
+      }
+    },
+    "node_modules/abbrev": {
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.0.4.tgz",
+      "integrity": "sha1-vVWuXkE7oXIu5Mq6H26hBBSlns0="
+    }
+  },
+  "dependencies": {
+    "abbrev": {
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.0.4.tgz",
+      "integrity": "sha1-vVWuXkE7oXIu5Mq6H26hBBSlns0="
+    }
+  }
+}
+
+`
+
+exports[`test/index.js TAP npm install prodDep@version > should have expected package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  }
+}
 
 `
 
 exports[`test/index.js TAP npm ls > should have expected ls output 1`] = `
-npm {CWD}
-\`-- smoke-tests@1.0.0 -> ./smoke-tests
-  +-- @npmcli/template-oss@3.3.2
-  +-- abbrev@1.0.4
-  +-- minify-registry-metadata@2.2.0
-  +-- promise-all-reject-late@1.0.1
-  \`-- tap@16.0.1
+project@1.0.0 {CWD}/smoke-tests/test/tap-testdir-index/project
++-- abbrev@1.0.4
+\`-- promise-all-reject-late@1.0.1
 
 
 `
 
 exports[`test/index.js TAP npm outdated > should have expected outdated output 1`] = `
-Package  Current  Wanted  Latest  Location                         Depended by
-abbrev     1.0.4   1.1.1   1.1.1  smoke-tests/node_modules/abbrev  smoke-tests@1.0.0
+Package  Current  Wanted  Latest  Location             Depended by
+abbrev     1.0.4   1.1.1   1.1.1  node_modules/abbrev  project
 
 `
 
-exports[`test/index.js TAP npm pkg > should have expected pkg get output 1`] = `
+exports[`test/index.js TAP npm pkg > should have expected npm pkg delete modified package.json result 1`] = `
 {
-  "smoke-tests": "ISC"
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  }
 }
 
 `
 
+exports[`test/index.js TAP npm pkg > should have expected npm pkg set modified package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  },
+  "tap": {
+    "test-env": [
+      "LC_ALL=sk"
+    ]
+  }
+}
+
+`
+
+exports[`test/index.js TAP npm pkg > should have expected pkg delete output 1`] = `
+
+`
+
+exports[`test/index.js TAP npm pkg > should have expected pkg get output 1`] = `
+"ISC"
+
+`
+
 exports[`test/index.js TAP npm pkg > should have expected pkg set output 1`] = `
-{}
+
+`
+
+exports[`test/index.js TAP npm pkg > should print package.json contents 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "ma",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  },
+  "tap": {
+    "test-env": [
+      "LC_ALL=sk"
+    ]
+  }
+}
 
 `
 
 exports[`test/index.js TAP npm prefix > should have expected prefix output 1`] = `
-{CWD}
+{CWD}/smoke-tests/test/tap-testdir-index/project
 
 `
 
 exports[`test/index.js TAP npm run-script > should have expected run-script output 1`] = `
 
-> smoke-tests@1.0.0 hello
+> project@1.0.0 hello
 > echo Hello
 
 Hello
+
+`
+
+exports[`test/index.js TAP npm set-script > should have expected script added package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  },
+  "devDependencies": {
+    "promise-all-reject-late": "^1.0.1"
+  }
+}
 
 `
 
@@ -448,20 +619,142 @@ exports[`test/index.js TAP npm set-script > should have expected set-script outp
 
 `
 
+exports[`test/index.js TAP npm uninstall > should have expected uninstall lockfile result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "project",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "abbrev": "^1.0.4"
+      }
+    },
+    "node_modules/abbrev": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz",
+      "integrity": "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
+    }
+  },
+  "dependencies": {
+    "abbrev": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz",
+      "integrity": "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
+    }
+  }
+}
+
+`
+
+exports[`test/index.js TAP npm uninstall > should have expected uninstall package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  }
+}
+
+`
+
 exports[`test/index.js TAP npm uninstall > should have expected uninstall reify output 1`] = `
 
-up to date 
+removed 1 package 
 
-134 packages are looking for funding
-  run \`npm fund\` for details
+`
+
+exports[`test/index.js TAP npm update dep > should have expected update lockfile result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "project",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "abbrev": "^1.0.4"
+      },
+      "devDependencies": {
+        "promise-all-reject-late": "^1.0.1"
+      }
+    },
+    "node_modules/abbrev": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz",
+      "integrity": "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
+    },
+    "node_modules/promise-all-reject-late": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/promise-all-reject-late/-/promise-all-reject-late-1.0.1.tgz",
+      "integrity": "sha512-vuf0Lf0lOxyQREH7GDIOUMLS7kz+gs8i6B+Yi8dC68a2sychGrHTJYghMBD6k7eUcH0H5P73EckCA48xijWqXw==",
+      "dev": true,
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    }
+  },
+  "dependencies": {
+    "abbrev": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz",
+      "integrity": "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
+    },
+    "promise-all-reject-late": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/promise-all-reject-late/-/promise-all-reject-late-1.0.1.tgz",
+      "integrity": "sha512-vuf0Lf0lOxyQREH7GDIOUMLS7kz+gs8i6B+Yi8dC68a2sychGrHTJYghMBD6k7eUcH0H5P73EckCA48xijWqXw==",
+      "dev": true
+    }
+  }
+}
+
+`
+
+exports[`test/index.js TAP npm update dep > should have expected update package.json result 1`] = `
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo /"Error: no test specified/" && exit 1",
+    "hello": "echo Hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abbrev": "^1.0.4"
+  },
+  "devDependencies": {
+    "promise-all-reject-late": "^1.0.1"
+  }
+}
 
 `
 
 exports[`test/index.js TAP npm update dep > should have expected update reify output 1`] = `
 
-removed 1 package 
+changed 1 package 
 
-134 packages are looking for funding
+1 package is looking for funding
   run \`npm fund\` for details
 
 `

@@ -6,12 +6,12 @@
   "scripts": {
     "lint": "eslint \"**/*.js\"",
     "postlint": "template-oss-check",
+    "template-oss-apply": "template-oss-apply --force",
     "lintfix": "npm run lint -- --fix",
     "preversion": "npm test",
     "postversion": "git push origin --follow-tags",
     "snap": "tap",
     "test": "tap",
-    "template-oss-apply": "template-oss-apply --force",
     "posttest": "npm run lint"
   },
   "repository": {
@@ -23,6 +23,7 @@
     "minify-registry-metadata": "^2.2.0"
   },
   "devDependencies": {
+    "@npmcli/eslint-config": "^3.0.1",
     "@npmcli/template-oss": "3.3.2",
     "rimraf": "^3.0.2",
     "tap": "^16.0.1"

@@ -226,8 +226,7 @@
     "lintfix": "npm run lint -- --fix",
     "lint-all": "npm run lint --if-present --workspaces --include-workspace-root",
     "prelint": "rimraf test/npm_cache*",
-    "resetdeps": "bash scripts/resetdeps.sh",
-    "smoke-tests": "npm run test -w smoke-tests"
+    "resetdeps": "bash scripts/resetdeps.sh"
   },
   "tap": {
     "test-env": [
