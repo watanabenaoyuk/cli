@@ -51,6 +51,10 @@ jobs:
         shell: ${{ matrix.platform.shell }}
     steps:
       - uses: actions/checkout@v3
+      - name: Setup git user
+        run: |
+          git config --global user.email "ops+npm-cli@npmjs.com"
+          git config --global user.name "npm cli ops bot"
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
@@ -59,15 +63,18 @@ jobs:
       - name: Pack
         run: |
           node bin/npm-cli.js rm npm -g -f
+          which npm || true
+          NPM_VERSION=$(node bin/npm-cli.js --version)
+          node bin/npm-cli.js version $NPM_VERSION-$GITHUB_SHA.0 --ignore-scripts
           node bin/npm-cli.js run resetdeps
           git clean -fd
-          node bin/npm-cli.js --production
+          node bin/npm-cli.js ls --production
           node bin/npm-cli.js prune --production --no-save --no-audit --no-fund
-	        node scripts/git-dirty.js
+          node scripts/git-dirty.js
           node bin/npm-cli.js pack --pack-destination=$RUNNER_TEMP
-          tar xf $RUNNER_TEMP/npm-*.tgz
+          node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION-$GITHUB_SHA.0
           node bin/npm-cli.js install --ignore-scripts --no-audit --no-fund -w smoke-tests
-          node bin/npm-cli.js run smoke-tests
+          SMOKE_TEST_NPM_DIR=$(which npm) node bin/npm-cli.js run smoke-tests
           node scripts/git-dirty.js
 
   test-all:

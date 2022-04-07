@@ -6,7 +6,7 @@ const t = require('tap')
 const rimraf = promisify(require('rimraf'))
 
 const cwd = process.cwd()
-const npmDir = process.env.SMOKE_TEST_NPM_PACKAGE || resolve(cwd, '..')
+const npmDir = process.env.SMOKE_TEST_NPM_DIR || resolve(cwd, '..')
 
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
 
