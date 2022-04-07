@@ -5,8 +5,8 @@ const { join, resolve } = require('path')
 const t = require('tap')
 const rimraf = promisify(require('rimraf'))
 
-const cwd = process.cwd()
-const npmDir = process.env.SMOKE_TEST_NPM_DIR || resolve(__dirname, '..', '..')
+const cwd = resolve(__dirname, '..', '..')
+const npmDir = process.env.SMOKE_TEST_NPM_DIR || cwd
 
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
 
@@ -64,11 +64,12 @@ const exec = async (cmd, ...extraOpts) => {
       HOME: path,
       PATH: `${process.env.PATH}:${binLocation}`,
     },
+    encoding: 'utf-8',
   })
   if (res.stderr && process.env.CI) {
     console.error(res.stderr)
   }
-  return String(res.stdout)
+  return res.stdout
 }
 
 // setup server
@@ -80,7 +81,7 @@ t.afterEach((t) => {
 })
 t.teardown(stop)
 
-const readFile = filename => String(fs.readFileSync(resolve(localPrefix, filename)))
+const readFile = filename => fs.readFileSync(resolve(localPrefix, filename), 'utf-8')
 
 // this test must come first, its package.json will be destroyed and the one
 // created in the next test (npm init) will create a new one that must be
@@ -137,9 +138,14 @@ t.test('npm init', async t => {
 t.test('npm (no args)', async t => {
   const err = await exec('', '--loglevel=notice').catch(e => e)
 
+  const [version, whereami] = err.stdout.match(/^npm@.*$/m)[0].split(' ')
+
+  console.error(version)
+  console.error(whereami)
+
   t.equal(err.code, 1, 'should exit with error code')
   t.equal(err.stderr, '', 'should have no stderr output')
-  t.matchSnapshot(String(err.stdout), 'should have expected no args output')
+  t.matchSnapshot(err.stdout, 'should have expected no args output')
 })
 
 t.test('npm install prodDep@version', async t => {
@@ -193,7 +199,7 @@ t.test('npm outdated', async t => {
 
   t.equal(err.code, 1, 'should exit with error code')
   t.not(err.stderr, '', 'should have stderr output')
-  t.matchSnapshot(String(err.stdout), 'should have expected outdated output')
+  t.matchSnapshot(err.stdout, 'should have expected outdated output')
 })
 
 t.test('npm set-script', async t => {
