@@ -85,7 +85,7 @@ test-all: deps
 	node bin/npm-cli.js run test-all
 
 ls-ok:
-	node . ls --production >/dev/null
+	node bin/npm-cli.js ls --production >/dev/null
 
 gitclean:
 	git clean -fd

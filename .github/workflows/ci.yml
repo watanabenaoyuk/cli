@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: 16.x
           cache: npm
-      - run: node ./bin/npm-cli.js run resetdeps
-      - run: node ./bin/npm-cli.js run lint
+      - run: node bin/npm-cli.js run resetdeps
+      - run: node bin/npm-cli.js run lint
 
   check_docs:
     runs-on: ubuntu-latest
@@ -43,8 +43,8 @@ jobs:
         with:
           node-version: 16.x
           cache: npm
-      - run: node ./bin/npm-cli.js run resetdeps
-      - run: node ./bin/npm-cli.js run licenses
+      - run: node bin/npm-cli.js run resetdeps
+      - run: node bin/npm-cli.js run licenses
   
   smoke-tests:
     runs-on: ubuntu-latest
@@ -55,8 +55,8 @@ jobs:
         with:
           node-version: 16.x
           cache: npm
-      - run: node ./bin/npm-cli.js run resetdeps
-      - run: node ./bin/npm-cli.js test -w smoke-tests --ignore-scripts
+      - run: node bin/npm-cli.js run resetdeps
+      - run: node bin/npm-cli.js test -w smoke-tests --ignore-scripts
       - name: git status
         if: matrix.platform.os != 'windows-latest'
         run: node scripts/git-dirty.js
@@ -90,8 +90,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: npm
-    - run: node ./bin/npm-cli.js run resetdeps
-    - run: node ./bin/npm-cli.js run test --ignore-scripts
+    - run: node bin/npm-cli.js run resetdeps
+    - run: node bin/npm-cli.js run test --ignore-scripts
     - name: git status
       if: matrix.platform.os != 'windows-latest'
       run: node scripts/git-dirty.js
