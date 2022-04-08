@@ -1,15 +1,17 @@
-const fs = require('fs')
+const { readFileSync, realpathSync, mkdirSync, existsSync, writeFileSync } = require('fs')
 const { promisify } = require('util')
 const execAsync = promisify(require('child_process').exec)
-const { join, resolve, dirname } = require('path')
+const { join, resolve, sep } = require('path')
 const t = require('tap')
 const rimraf = promisify(require('rimraf'))
+const which = require('which').sync
 
 const { SMOKE_TEST_NPM, CI, PATH } = process.env
 
 const cwd = resolve(__dirname, '..', '..')
-const npmLocation = SMOKE_TEST_NPM || join(cwd, 'bin', 'npm-cli.js')
-const npmDir = dirname(dirname(npmLocation))
+const npmCli = join('bin', 'npm-cli.js')
+const execArgv = SMOKE_TEST_NPM ? 'npm' : `"${process.execPath}" "${join(cwd, npmCli)}"`
+const npmDir = SMOKE_TEST_NPM ? realpathSync(which('npm')).replace(sep + npmCli, '') : cwd
 
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
 
@@ -60,7 +62,7 @@ const exec = async (cmd, ...extraOpts) => {
     // This is required so we dont detect any workspace roots above the testdir
     opts.push('--no-workspaces')
   }
-  const res = await execAsync(`"${process.execPath}" "${npmLocation}" ${cmd} ${opts.join(' ')}`, {
+  const res = await execAsync(`${execArgv} ${cmd} ${opts.join(' ')}`, {
     cwd: localPrefix,
     env: {
       HOME: path,
@@ -78,12 +80,12 @@ const exec = async (cmd, ...extraOpts) => {
 const { start, stop, registry } = require('../lib/server.js')
 t.before(start)
 t.afterEach((t) => {
-  const updateExists = fs.existsSync(join(cacheLocation, '_update-notifier-last-checked'))
+  const updateExists = existsSync(join(cacheLocation, '_update-notifier-last-checked'))
   t.equal(updateExists, false)
 })
 t.teardown(stop)
 
-const readFile = filename => fs.readFileSync(resolve(localPrefix, filename), 'utf-8')
+const readFile = filename => readFileSync(resolve(localPrefix, filename), 'utf-8')
 
 // this test must come first, its package.json will be destroyed and the one
 // created in the next test (npm init) will create a new one that must be
@@ -94,19 +96,19 @@ t.test('npm install sends correct user-agent', async t => {
     name: 'smoke-test-workspaces',
     workspaces: ['packages/*'],
   })
-  fs.writeFileSync(pkgPath, pkgContent, { encoding: 'utf8' })
+  writeFileSync(pkgPath, pkgContent, { encoding: 'utf8' })
 
   const wsRoot = join(localPrefix, 'packages')
-  fs.mkdirSync(wsRoot)
+  mkdirSync(wsRoot)
 
   const wsPath = join(wsRoot, 'foo')
-  fs.mkdirSync(wsPath)
+  mkdirSync(wsPath)
 
   const wsPkgPath = join(wsPath, 'package.json')
   const wsContent = JSON.stringify({
     name: 'foo',
   })
-  fs.writeFileSync(wsPkgPath, wsContent, { encoding: 'utf8' })
+  writeFileSync(wsPkgPath, wsContent, { encoding: 'utf8' })
   t.teardown(async () => {
     await rimraf(`${localPrefix}/*`)
   })
@@ -132,7 +134,7 @@ t.test('npm init', async t => {
   const cmdRes = await exec('init -y')
 
   t.matchSnapshot(cmdRes, 'should have successful npm init result')
-  const pkg = JSON.parse(fs.readFileSync(resolve(localPrefix, 'package.json')))
+  const pkg = JSON.parse(readFileSync(resolve(localPrefix, 'package.json')))
   t.equal(pkg.name, 'project', 'should have expected generated name')
   t.equal(pkg.version, '1.0.0', 'should have expected generated version')
 })

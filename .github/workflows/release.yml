@@ -73,7 +73,7 @@ jobs:
           node bin/npm-cli.js install -g $RUNNER_TEMP/npm-$NPM_VERSION.tgz
           node bin/npm-cli.js install -w smoke-tests --ignore-scripts --no-audit --no-fund
           rm -rf {lib,bin,index.js}
-          SMOKE_TEST_NPM=$(readlink -f $(which npm)) npm test -w smoke-tests --ignore-scripts
+          SMOKE_TEST_NPM=1 npm test -w smoke-tests --ignore-scripts
           
   test-all:
     if: |
